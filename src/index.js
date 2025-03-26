@@ -62,6 +62,8 @@ const socialLinksRoutes = require('./routes/socialLinks');
 const referralsRoutes = require('./routes/referrals');
 const packRoutes = require('./routes/pack');
 
+app.use(express.json());
+
 app.use('/api/admin', adminRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/wallet', walletRoutes);
