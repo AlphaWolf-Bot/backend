@@ -1,34 +1,32 @@
 const express = require('express');
-const { supabase } = require('../utils/supabase');
-const cache = require('../utils/cache');
-const router = express.Router();
+const { supabase } = require('../utils/supabase'); // Adjust path if needed
+const cache = require('../utils/cache'); // Adjust path if needed
+const router = express.Router(); // Define router here
 
-// Simulated auth middleware (replace with real Telegram auth later)
+// Example middleware (adjust as per your code)
 const authMiddleware = async (req, res, next) => {
-  req.userId = '12345'; // Temporary for testing
+  req.userId = '12345'; // Simulated user ID; replace with your auth logic
   next();
 };
 
+// Define the /tap route
 router.post('/tap', authMiddleware, async (req, res) => {
   try {
     const cacheKey = `user:${req.userId}`;
     let user = null;
 
-    // Check cache first
     const cachedUser = await cache.get(cacheKey);
     if (cachedUser) {
       user = JSON.parse(cachedUser);
     }
 
-    // If not in cache, fetch from Supabase
     if (!user) {
       const { data } = await supabase
         .from('users')
         .select('taps_today, last_tap_date, coins')
         .eq('telegram_id', req.userId)
         .single();
-
-      user = data || { taps_today: 0, last_tap_date: null, coins: 0 }; // Default if no user
+      user = data || { taps_today: 0, last_tap_date: null, coins: 0 };
       await cache.set(cacheKey, JSON.stringify(user));
     }
 
@@ -45,7 +43,6 @@ router.post('/tap', authMiddleware, async (req, res) => {
     user.taps_today += 1;
     user.coins = (user.coins || 0) + 1;
 
-    // Update Supabase and cache
     await supabase
       .from('users')
       .upsert({ telegram_id: req.userId, ...user });
@@ -58,4 +55,4 @@ router.post('/tap', authMiddleware, async (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = router; // Export the router
