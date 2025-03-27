@@ -1,10 +1,11 @@
 const express = require('express');
+const router = express.Router(); // Define router
 const { supabase } = require('../utils/supabase');
 const cache = require('../utils/cache');
 const crypto = require('crypto');
 const { parse } = require('querystring');
 
-const router = express.Router(); // Define router
+
 
 const authMiddleware = async (req, res, next) => {
   const initData = req.headers['x-telegram-init-data'];
