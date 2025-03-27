@@ -3,6 +3,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const Sentry = require('@sentry/node');
 const Tracing = require('@sentry/tracing');
+const router = express.Router();
 require('dotenv').config();
 
 // Initialize Express app
