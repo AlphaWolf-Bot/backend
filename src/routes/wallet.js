@@ -1,12 +1,12 @@
 const express = require('express');
-const router = express.Router(); // Define router
 const { supabase } = require('../utils/supabase');
 const cache = require('../utils/cache');
 const crypto = require('crypto');
 const { parse } = require('querystring');
 
+const router = express.Router(); // Define router here
 
-
+// Middleware to authenticate Telegram user using initData
 const authMiddleware = async (req, res, next) => {
   const initData = req.headers['x-telegram-init-data'];
   if (!initData) {
@@ -47,6 +47,7 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
+// Route to handle tap action
 router.post('/tap', authMiddleware, async (req, res) => {
   try {
     const cacheKey = `user:${req.userId}`;
